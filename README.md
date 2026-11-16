@@ -29,34 +29,68 @@ Analisis menggunakan lima dataset utama:
 Data yang dianalisis dibatasi pada pesanan berstatus `delivered` dengan tanggal pemesanan selama tahun 2017. Nilai penjualan dihitung dari kolom `price`, tanpa biaya pengiriman (`freight_value`).
 
 ## Instalasi dan Menjalankan Dashboard
-### 1. Persyaratan
-Pastikan Python sudah terinstal pada komputer.
+## Setup Environment - Shell/Terminal (macOS/Linux)
 
-### 2. Unduh Repository
-Unduh repository proyek dari GitHub atau gunakan perintah:
+### 1. Clone Repository
+
 ```bash
 git clone https://github.com/ChenMLing/e-commercepublic-dataset.git
-```
-Kemudian masuk ke folder proyek:
-```bash
 cd e-commercepublic-dataset
 ```
 
-### 3. Instal Library
-Jalankan perintah berikut pada terminal:
+### 2. Membuat Virtual Environment
+
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m venv .venv
 ```
 
-### 4. Jalankan Dashboard Streamlit
-Jalankan perintah:
+### 3. Mengaktifkan Virtual Environment
+
 ```bash
-python3 -m streamlit run dashboard.py
+source .venv/bin/activate
 ```
+
+### 4. Menginstal Library
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+## Setup Environment - Windows
+
+```bash
+git clone https://github.com/ChenMLing/e-commercepublic-dataset.git
+cd e-commercepublic-dataset
+py -m venv .venv
+.venv\Scripts\activate
+python -m pip install -r requirements.txt
+```
+
+## Run Streamlit App
+
+```bash
+streamlit run dashboard.py
+```
+
 Dashboard akan terbuka melalui browser, biasanya pada alamat:
+
 http://localhost:8501
 
-Catatan: Nomor port dapat berbeda apabila port tersebut sedang digunakan oleh aplikasi lain.
+Nomor port dapat berbeda apabila port tersebut sedang digunakan.
+
+## Dashboard Online
+
+Dashboard juga dapat diakses melalui Streamlit Community Cloud:
+
+https://e-commercepublic-dataset.streamlit.app
+
+## Menonaktifkan Virtual Environment
+
+Setelah selesai, jalankan:
+
+```bash
+deactivate
+```
 
 ## Fitur Dashboard
 Dashboard menyediakan:
@@ -78,13 +112,6 @@ Dashboard menyediakan:
 - Plotly
 - Streamlit
 - Jupyter Notebook / Google Colab
-
-## Dashboard Online
-Dashboard juga dapat diakses secara online melalui Streamlit Community Cloud:
-
-URL Dashboard: https://e-commercepublic-dataset.streamlit.app
-
-Dashboard online dapat diakses tanpa perlu menginstal Python atau menjalankan aplikasi secara lokal.
 
 ## Sumber Data
 *E-Commerce Public Dataset*
