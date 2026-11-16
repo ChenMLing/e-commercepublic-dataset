@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -27,6 +26,62 @@ def load_data():
     return df
 
 main_df = load_data()
+
+# Filter Interaktif Sidebar
+st.sidebar.header("Filter Data")
+
+min_date = main_df["order_purchase_timestamp"].min().date()
+max_date = main_df["order_purchase_timestamp"].max().date()
+
+selected_dates = st.sidebar.date_input(
+    "Rentang Tanggal Pemesanan",
+    value=(min_date, max_date),
+    min_value=min_date,
+    max_value=max_date
+)
+
+state_options = sorted(main_df["customer_state"].dropna().unique())
+
+selected_states = st.sidebar.multiselect(
+    "Negara Bagian Pelanggan",
+    options=state_options,
+    default=state_options
+)
+
+if len(selected_dates) != 2:
+    st.warning("Silakan pilih tanggal awal dan akhir.")
+    st.stop()
+
+start_date, end_date = selected_dates
+
+filtered_df = main_df[
+    (
+        main_df["order_purchase_timestamp"].dt.date
+        >= start_date
+    )
+    &
+    (
+        main_df["order_purchase_timestamp"].dt.date
+        <= end_date
+    )
+    &
+    (
+        main_df["customer_state"].isin(selected_states)
+    )
+].copy()
+
+if filtered_df.empty:
+    st.warning(
+        "Tidak ada data untuk kombinasi filter yang dipilih. "
+        "Silakan ubah rentang tanggal atau negara bagian."
+    )
+    st.stop()
+
+st.sidebar.caption(
+    f"Menampilkan {filtered_df['order_id'].nunique():,} "
+    "pesanan sesuai filter."
+)
+
 
 st.title("🛒 E-Commerce Public Dashboard")
 st.markdown(
