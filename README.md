@@ -51,7 +51,7 @@ python -m pip install -r requirements.txt
 ### 4. Jalankan Dashboard Streamlit
 Jalankan perintah:
 ```bash
-python -m streamlit run dashboard/dashboard.py
+python3 -m streamlit run dashboard.py
 ```
 Dashboard akan terbuka melalui browser, biasanya pada alamat:
 http://localhost:8501
