@@ -8,9 +8,9 @@ Hasil analisis disajikan melalui dashboard interaktif menggunakan **Streamlit** 
 
 ## Pertanyaan Bisnis
 
-1. Kategori produk apa yang memiliki total nilai penjualan tertinggi dan terendah berdasarkan pesanan yang dilakukan selama tahun 2017?
-2. Berapa persentase pesanan yang dikirimkan melewati estimasi tanggal pengiriman dari seluruh pesanan yang telah diterima pelanggan dan dilakukan selama tahun 2017?
-3. Negara bagian pelanggan mana yang memberikan kontribusi total nilai penjualan terbesar berdasarkan pesanan yang dilakukan selama tahun 2017?
+1. Kategori produk apa yang memiliki total nilai penjualan tertinggi dan terendah berdasarkan pesanan berstatus delivered selama tahun 2017, untuk menentukan kategori yang perlu diprioritaskan dalam strategi pemasaran dan evaluasi pengelolaan produk?
+2. Berapa persentase pesanan berstatus delivered yang diterima pelanggan melewati estimasi tanggal pengiriman selama tahun 2017, untuk mengevaluasi ketepatan layanan pengiriman dan menentukan kebutuhan perbaikan operasional logistik?
+3. NNegara bagian pelanggan mana yang memberikan kontribusi total nilai penjualan terbesar dari pesanan berstatus delivered selama tahun 2017, untuk menentukan wilayah prioritas pemasaran dan mengevaluasi peluang pengembangan pasar?
 
 ## Dataset
 
