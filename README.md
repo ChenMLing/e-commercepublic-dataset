@@ -39,7 +39,7 @@ git clone https://github.com/ChenMLing/e-commercepublic-dataset.git
 ```
 Kemudian masuk ke folder proyek:
 ```bash
-cd olist-ecommerce-dashboard
+cd e-commercepublic-dataset
 ```
 
 ### 3. Instal Library
