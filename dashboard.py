@@ -82,7 +82,6 @@ st.sidebar.caption(
     "pesanan sesuai filter."
 )
 
-
 st.title("🛒 E-Commerce Public Dashboard")
 st.markdown(
     "Analisis penjualan produk, ketepatan pengiriman, "
@@ -92,10 +91,9 @@ st.markdown(
 
 st.divider()
 
-total_sales = main_df["price"].sum()
-total_orders = main_df["order_id"].nunique()
-
-delivery_df = main_df.drop_duplicates(subset="order_id").copy()
+total_sales = filtered_df["price"].sum()
+total_orders = filtered_df["order_id"].nunique()
+delivery_df = filtered_df.drop_duplicates(subset="order_id").copy()
 
 delivery_df["is_late"] = (
     delivery_df["order_delivered_customer_date"].dt.normalize()
@@ -135,58 +133,72 @@ st.markdown(
 )
 
 category_sales = (
-    main_df[
-        main_df["product_category_name_english"] != "unknown"
+    filtered_df[
+        filtered_df["product_category_name_english"].notna()
+        & (
+            filtered_df["product_category_name_english"]
+            != "unknown"
+        )
     ]
     .groupby("product_category_name_english", as_index=False)
     .agg(total_sales=("price", "sum"))
     .sort_values("total_sales", ascending=False)
 )
 
-top_5 = category_sales.head(5).sort_values("total_sales")
-bottom_5 = category_sales.tail(5).sort_values("total_sales")
+if not category_sales.empty:
+    top_5 = category_sales.head(5).sort_values("total_sales")
+    bottom_5 = category_sales.tail(5).sort_values("total_sales")
 
-col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-with col1:
-    fig_top = px.bar(
-        top_5,
-        x="total_sales",
-        y="product_category_name_english",
-        orientation="h",
-        title="5 Kategori Penjualan Tertinggi",
-        labels={
-            "total_sales": "Total Penjualan ($)",
-            "product_category_name_english": "Kategori Produk"
-        },
-        color_discrete_sequence=["steelblue"]
+    with col1:
+        fig_top = px.bar(
+            top_5,
+            x="total_sales",
+            y="product_category_name_english",
+            orientation="h",
+            title="5 Kategori Penjualan Tertinggi",
+            labels={
+                "total_sales": "Total Penjualan (R$)",
+                "product_category_name_english": "Kategori Produk"
+            },
+            color_discrete_sequence=["steelblue"]
+        )
+
+        fig_top.update_layout(showlegend=False)
+        st.plotly_chart(fig_top, use_container_width=True)
+
+    with col2:
+        fig_bottom = px.bar(
+            bottom_5,
+            x="total_sales",
+            y="product_category_name_english",
+            orientation="h",
+            title="5 Kategori Penjualan Terendah",
+            labels={
+                "total_sales": "Total Penjualan (R$)",
+                "product_category_name_english": "Kategori Produk"
+            },
+            color_discrete_sequence=["salmon"]
+        )
+
+        fig_bottom.update_layout(showlegend=False)
+        st.plotly_chart(fig_bottom, use_container_width=True)
+
+    highest = category_sales.iloc[0]
+    lowest = category_sales.iloc[-1]
+
+    st.info(
+        f"Kategori {highest['product_category_name_english']} "
+        f"memiliki nilai penjualan tertinggi "
+        f"(R$ {highest['total_sales']:,.2f}), sedangkan "
+        f"{lowest['product_category_name_english']} "
+        f"memiliki nilai penjualan terendah "
+        f"(R$ {lowest['total_sales']:,.2f})."
     )
 
-    fig_top.update_layout(showlegend=False)
-    st.plotly_chart(fig_top, use_container_width=True)
-
-with col2:
-    fig_bottom = px.bar(
-        bottom_5,
-        x="total_sales",
-        y="product_category_name_english",
-        orientation="h",
-        title="5 Kategori Penjualan Terendah",
-        labels={
-            "total_sales": "Total Penjualan ($)",
-            "product_category_name_english": "Kategori Produk"
-        },
-        color_discrete_sequence=["salmon"]
-    )
-
-    fig_bottom.update_layout(showlegend=False)
-    st.plotly_chart(fig_bottom, use_container_width=True)
-
-st.info(
-    "Kategori bed_bath_table memiliki nilai penjualan tertinggi "
-    "($490.596,92$), sedangkan diapers_and_hygiene memiliki "
-    "nilai penjualan terendah ($76,00$)."
-)
+else:
+    st.info("Tidak ada kategori produk yang dapat dianalisis.")
 
 # Visualisasi 2: Ketepatan Pengiriman
 st.divider()
@@ -254,11 +266,14 @@ with col2:
     st.metric("Tepat Waktu / Lebih Awal", f"{ontime_orders:,}")
     st.metric("Terlambat", f"{late_orders:,}")
 
+ontime_percentage = 100 - late_percentage
+
 st.info(
     f"Dari {len(delivery_df):,} pesanan yang diterima pelanggan, "
     f"sebanyak {late_orders:,} pesanan ({late_percentage:.2f}%) "
-    "mengalami keterlambatan. Sebagian besar pesanan diterima "
-    "sesuai atau sebelum estimasi pengiriman."
+    f"mengalami keterlambatan, sedangkan "
+    f"{ontime_orders:,} pesanan ({ontime_percentage:.2f}%) "
+    "diterima tepat waktu atau lebih awal."
 )
 
 # Visualisasi 3: Penjualan Berdasarkan Negara Bagian
@@ -271,7 +286,7 @@ st.markdown(
 )
 
 state_sales = (
-    main_df.groupby("customer_state", as_index=False)
+    filtered_df.groupby("customer_state", as_index=False)
     .agg(total_sales=("price", "sum"))
     .sort_values("total_sales", ascending=False)
 )
@@ -280,13 +295,17 @@ state_sales["contribution_pct"] = (
     state_sales["total_sales"] / state_sales["total_sales"].sum() * 100
 )
 
-top_n = st.slider(
-    "Jumlah negara bagian yang ditampilkan",
-    min_value=5,
-    max_value=len(state_sales),
-    value=10,
-    step=1
-)
+if len(state_sales) > 1:
+    top_n = st.slider(
+        "Jumlah negara bagian yang ditampilkan",
+        min_value=1,
+        max_value=len(state_sales),
+        value=min(10, len(state_sales)),
+        step=1
+    )
+else:
+    top_n = 1
+    st.caption("Hanya satu negara bagian tersedia sesuai filter.")
 
 top_states = (
     state_sales.head(top_n)
@@ -331,10 +350,11 @@ top_3_contribution = top_3_states["contribution_pct"].sum()
 
 st.markdown("#### Tiga Negara Bagian dengan Kontribusi Terbesar")
 
-col1, col2, col3 = st.columns(3)
+
+cols = st.columns(len(top_3_states))
 
 for col, (_, row) in zip(
-    [col1, col2, col3],
+    cols,
     top_3_states.iterrows()
 ):
     with col:
@@ -344,8 +364,13 @@ for col, (_, row) in zip(
             delta=f"{row['contribution_pct']:.2f}% dari total"
         )
 
+top_state_names = ", ".join(
+    top_3_states["customer_state"].tolist()
+)
+
 st.info(
-    f"Tiga negara bagian dengan kontribusi penjualan terbesar "
-    f"adalah SP, RJ, dan MG, dengan total kontribusi "
-    f"{top_3_contribution:.2f}% dari keseluruhan nilai penjualan."
+    f"Negara bagian dengan kontribusi penjualan terbesar "
+    f"pada data yang dipilih adalah {top_state_names}, "
+    f"dengan kontribusi gabungan "
+    f"{top_3_contribution:.2f}% dari total nilai penjualan."
 )
