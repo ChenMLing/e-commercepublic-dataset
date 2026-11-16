@@ -35,7 +35,7 @@ Pastikan Python sudah terinstal pada komputer.
 ### 2. Unduh Repository
 Unduh repository proyek dari GitHub atau gunakan perintah:
 ```bash
-git clone <URL_REPOSITORY_GITHUB>
+git clone https://github.com/ChenMLing/e-commercepublic-dataset.git
 ```
 Kemudian masuk ke folder proyek:
 ```bash
