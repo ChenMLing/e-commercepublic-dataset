@@ -1,4 +1,4 @@
-# E-Commerce Pubic Dataset Analysis
+# E-Commerce Public Dataset Analysis
 
 ## Deskripsi Proyek
 
@@ -45,7 +45,7 @@ cd e-commercepublic-dataset
 ### 3. Instal Library
 Jalankan perintah berikut pada terminal:
 ```bash
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ### 4. Jalankan Dashboard Streamlit
@@ -56,7 +56,7 @@ python3 -m streamlit run dashboard.py
 Dashboard akan terbuka melalui browser, biasanya pada alamat:
 http://localhost:8501
 
-Port dapat berbeda jika port tersebut sedang digunakan.
+Catatan: Nomor port dapat berbeda apabila port tersebut sedang digunakan oleh aplikasi lain.
 
 ## Fitur Dashboard
 Dashboard menyediakan:
@@ -80,7 +80,11 @@ Dashboard menyediakan:
 - Jupyter Notebook / Google Colab
 
 ## Dashboard Online
-Tautan dashboard publik akan ditambahkan setelah deployment berhasil dilakukan.
+Dashboard juga dapat diakses secara online melalui Streamlit Community Cloud:
+
+URL Dashboard: https://e-commercepublic-dataset.streamlit.app
+
+Dashboard online dapat diakses tanpa perlu menginstal Python atau menjalankan aplikasi secara lokal.
 
 ## Sumber Data
 *E-Commerce Public Dataset*
